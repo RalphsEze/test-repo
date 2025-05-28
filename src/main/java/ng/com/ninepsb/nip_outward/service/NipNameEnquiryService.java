@@ -9,7 +9,7 @@ import ng.com.ninepsb.nip_outward.model.NipNameEnquiry;
 import java.time.LocalDateTime;
 
 public interface NipNameEnquiryService {
-    NipNameEnquiry getRecentEnquiry(AccountEnquiryRequest request, LocalDateTime leastTime, Long clientId, OpsProcessor processor);
+    NipNameEnquiry getRecentEnquiry(AccountEnquiryRequest request, LocalDateTime leastTime, String clientId, OpsProcessor processor);
 
     NipNameEnquiry initiate(AccountEnquiryRequest request, String sessionId, ClientProfile clientProfile, String callerIp, OpsProcessor processor);
 

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 class DefaultNipNameEnquiryService implements NipNameEnquiryService {
 
     @Override
-    public NipNameEnquiry getRecentEnquiry(AccountEnquiryRequest request, LocalDateTime leastTime, Long clientId, OpsProcessor processor) {
+    public NipNameEnquiry getRecentEnquiry(AccountEnquiryRequest request, LocalDateTime leastTime, String clientId, OpsProcessor processor) {
         return null;
     }
 

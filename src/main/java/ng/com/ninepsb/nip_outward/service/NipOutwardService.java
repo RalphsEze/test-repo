@@ -17,4 +17,6 @@ public interface NipOutwardService {
         var handler = getHandler(nipOutwardRequest.getHandlerName());
         return handler.handle(nipOutwardRequest, httpServletRequest);
     }
+
+    void testCallToNibss(HttpServletRequest httpServletRequest);
 }

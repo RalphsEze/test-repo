@@ -55,6 +55,14 @@ public class Constants {
     public static final String Flat = "Flat";
     public static final String None = "NONE";
 
+    // Cache keys
+    public static final String CACHE_KEY_MOBILE_PREFIX = "account_mobile_prefix";
+    public static final String CACHE_KEY_NAME_ENQ_VALIDITY_TIME = "name_enquiry_validity_time";
+    public static final String CACHE_KEY_IS_TEST = "is_test";
+    public static final String CACHE_KEY_BLOCKED_CHANNELS = "blocked_channels";
+    public static final String CACHE_KEY_CEVA_PREFIXES = "account_ceva_prefixes";
+    public static final String CACHE_KEY_VIRTUAL_PREFIX = "virtual_prefix";
+
     // Private constructor to prevent instantiation
     private Constants() {
         throw new UnsupportedOperationException("Constants class cannot be instantiated");

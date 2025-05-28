@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 class DefaultClientProfileService implements ClientProfileService {
 
     @Override
-    public ClientProfile getClientProfile(Long clientId) {
+    public ClientProfile getClientProfile(String clientId) {
         return new ClientProfile();
     }
 }

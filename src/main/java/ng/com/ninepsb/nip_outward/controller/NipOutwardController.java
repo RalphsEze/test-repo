@@ -4,10 +4,7 @@ import ng.com.ninepsb.nip_outward.dto.request.AccountEnquiryRequest;
 import ng.com.ninepsb.nip_outward.dto.response.AccountEnquiryResponse;
 import ng.com.ninepsb.nip_outward.dto.response.ApiResponse;
 import ng.com.ninepsb.nip_outward.service.NipOutwardService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,5 +27,11 @@ public class NipOutwardController {
             HttpServletRequest httpServletRequest) {
         var response = nipOutwardService.performAccountEnquiry(accountEnquiryRequest, httpServletRequest);
         return new ApiResponse<>(STATUS_CODE_SUCCESS, "Account enquiry successful", response);
+    }
+
+    @GetMapping("test")
+    public ApiResponse<String> testCallToNibss(HttpServletRequest httpServletRequest) {
+        nipOutwardService.testCallToNibss(httpServletRequest);
+        return new ApiResponse<>(STATUS_CODE_SUCCESS, "Account enquiry successful", "response");
     }
 }
