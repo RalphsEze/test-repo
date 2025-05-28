@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: nip-outward
+  profiles:
+    active: ${ACTIVE_PROFILE}
+  config:
+    import: optional:credentials/secretes.properties

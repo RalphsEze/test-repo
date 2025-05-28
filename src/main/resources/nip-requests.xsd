@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://core.nip.nibss/"
+           targetNamespace="http://core.nip.nibss/"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="string50">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string200">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string100">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string30">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="sessionIdType">
+        <xs:restriction base="xs:string">
+            <xs:length value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="institutionCodeType">
+        <xs:restriction base="xs:string">
+            <xs:length value="6"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="channelCodeType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="99"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="accountNumberType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="10"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="bankVerificationNumberType">
+        <xs:restriction base="xs:string">
+            <xs:length value="11"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="kycLevelType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="amountType">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2"/>
+            <xs:totalDigits value="18"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="mandateReferenceNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="35"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="reasonCodeType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="narrationType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="paymentReferenceType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="35"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="transactionLocationType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="BaseTransaction">
+        <xs:sequence>
+            <xs:element name="SessionID" type="tns:sessionIdType"/>
+            <xs:element name="DestinationInstitutionCode" type="tns:institutionCodeType" minOccurs="0"/>
+            <xs:element name="ChannelCode" type="tns:channelCodeType" minOccurs="0"/>
+            <xs:element name="ReferenceCode" type="tns:string50" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Header">
+        <xs:sequence>
+            <xs:element name="BatchNumber" type="tns:string50"/>
+            <xs:element name="NumberOfRecords" type="xs:int"/>
+            <xs:element name="ChannelCode" type="tns:channelCodeType"/>
+            <xs:element name="TransactionLocation" type="tns:transactionLocationType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Record">
+        <xs:sequence>
+            <xs:element name="InstitutionCode" type="tns:institutionCodeType"/>
+            <xs:element name="InstitutionName" type="tns:string100"/>
+            <xs:element name="Category" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="AccountBlockRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="TargetAccountName" type="tns:string200"/>
+                        <xs:element name="TargetBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="TargetAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="ReasonCode" type="tns:reasonCodeType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AccountUnblockRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="TargetAccountName" type="tns:string200"/>
+                        <xs:element name="TargetBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="TargetAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="ReasonCode" type="tns:reasonCodeType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AmountBlockRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="TargetAccountName" type="tns:string200"/>
+                        <xs:element name="TargetBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="TargetAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="ReasonCode" type="tns:reasonCodeType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AmountUnblockRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="TargetAccountName" type="tns:string200"/>
+                        <xs:element name="TargetBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="TargetAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="ReasonCode" type="tns:reasonCodeType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BalanceEnquiryRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="AuthorizationCode" type="tns:string50"/>
+                        <xs:element name="TargetAccountName" type="tns:string200"/>
+                        <xs:element name="TargetBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="TargetAccountNumber" type="tns:accountNumberType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FinancialInstitutionListRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="Header" type="tns:Header"/>
+                        <xs:element name="Record" type="tns:Record" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FTAdviceCreditRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="NameEnquiryRef" type="tns:string50" minOccurs="0"/>
+                        <xs:element name="BeneficiaryAccountName" type="tns:string200"/>
+                        <xs:element name="BeneficiaryAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="BeneficiaryBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="BeneficiaryKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="OriginatorAccountName" type="tns:string200"/>
+                        <xs:element name="OriginatorAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="OriginatorBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="OriginatorKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="TransactionLocation" type="tns:transactionLocationType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="PaymentReference" type="tns:paymentReferenceType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FTAdviceDebitRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="NameEnquiryRef" type="tns:string50" minOccurs="0"/>
+                        <xs:element name="DebitAccountName" type="tns:string200"/>
+                        <xs:element name="DebitAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="DebitBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="DebitKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="BeneficiaryAccountName" type="tns:string200"/>
+                        <xs:element name="BeneficiaryAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="BeneficiaryBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="BeneficiaryKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="TransactionLocation" type="tns:transactionLocationType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="PaymentReference" type="tns:paymentReferenceType"/>
+                        <xs:element name="MandateReferenceNumber" type="tns:mandateReferenceNumberType"/>
+                        <xs:element name="TransactionFee" type="tns:amountType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FTSingleCreditRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="NameEnquiryRef" type="tns:string50" minOccurs="0"/>
+                        <xs:element name="BeneficiaryAccountName" type="tns:string200"/>
+                        <xs:element name="BeneficiaryAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="BeneficiaryBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="BeneficiaryKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="OriginatorAccountName" type="tns:string200"/>
+                        <xs:element name="OriginatorAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="OriginatorBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="OriginatorKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="TransactionLocation" type="tns:transactionLocationType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="PaymentReference" type="tns:paymentReferenceType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="FTSingleDebitRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="NameEnquiryRef" type="tns:string50" minOccurs="0"/>
+                        <xs:element name="DebitAccountName" type="tns:string200"/>
+                        <xs:element name="DebitAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="DebitBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="DebitKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="BeneficiaryAccountName" type="tns:string200"/>
+                        <xs:element name="BeneficiaryAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="BeneficiaryBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="BeneficiaryKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="TransactionLocation" type="tns:transactionLocationType"/>
+                        <xs:element name="Narration" type="tns:narrationType"/>
+                        <xs:element name="PaymentReference" type="tns:paymentReferenceType"/>
+                        <xs:element name="MandateReferenceNumber" type="tns:mandateReferenceNumberType"/>
+                        <xs:element name="TransactionFee" type="tns:amountType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="MandateAdviceRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="MandateReferenceNumber" type="tns:mandateReferenceNumberType"/>
+                        <xs:element name="Amount" type="tns:amountType"/>
+                        <xs:element name="DebitAccountName" type="tns:string200"/>
+                        <xs:element name="DebitAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="DebitBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="DebitKYCLevel" type="tns:kycLevelType"/>
+                        <xs:element name="BeneficiaryAccountName" type="tns:string200"/>
+                        <xs:element name="BeneficiaryAccountNumber" type="tns:accountNumberType"/>
+                        <xs:element name="BeneficiaryBankVerificationNumber" type="tns:bankVerificationNumberType"/>
+                        <xs:element name="BeneficiaryKYCLevel" type="tns:kycLevelType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="NESingleRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="AccountNumber" type="tns:accountNumberType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="TSQuerySingleRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:BaseTransaction">
+                    <xs:sequence>
+                        <xs:element name="SourceInstitutionCode" type="tns:institutionCodeType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
