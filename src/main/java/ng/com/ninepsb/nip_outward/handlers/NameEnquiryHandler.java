@@ -100,6 +100,41 @@ public class NameEnquiryHandler extends BaseHandler {
         return response;
     }
 
+    public AccountEnquiryResponse handle(NipOutwardRequest nipOutwardRequest) {
+        var request = (AccountEnquiryRequest) nipOutwardRequest;
+        String clientId = "CLIENT"; // This will be retrieved from authentication service
+
+        ClientProfile clientProfile = clientProfileService.getClientProfile(clientId);
+        logger.logRequest(request.toString(), clientProfile.toString());
+
+        if (appConfig.isTest()) {
+            return getTestResponse(request);
+        }
+
+        BankDetail bankDetail = bankUtils.getBankDetail(request.bankCode());
+        OpsProcessor processor = resolveProcessor(bankDetail.getBankCode());
+        LocalDateTime leastTime = LocalDateTime.now().minusMinutes(appConfig.getNameEnquiryValidityTime());
+
+        verifyAccountNotBlocked(clientId, request.accountNumber(), request.bankCode());
+
+        NipNameEnquiry recent = nipNameEnquiryService.getRecentEnquiry(request, leastTime, clientId, processor);
+        if (recent != null) {
+            return getCachedResponse();
+        }
+
+        String sessionId = SessionUtils.generateSessionId();
+        NipNameEnquiry nameEnquiry = nipNameEnquiryService.initiate(request, sessionId, clientProfile, "test-ip", processor);
+
+        LocalDateTime start = now();
+        AccountEnquiryResponse response = switch (processor) {
+            case LOCAL -> perform9psbNameEnquiry(request, sessionId, clientProfile, bankDetail, nameEnquiry);
+            case NIBSS -> performNibssNameEnquiry(request, sessionId, clientProfile, bankDetail, nameEnquiry);
+        };
+
+        nipNameEnquiryService.update(response, nameEnquiry, start, now());
+        return response;
+    }
+
     private AccountEnquiryResponse performNibssNameEnquiry(AccountEnquiryRequest request, String sessionId, ClientProfile clientProfile, BankDetail bankDetail, NipNameEnquiry nameEnquiry) {
 
         NESingleRequest neRequest = buildNERequest(request, sessionId, bankDetail, clientProfile);
